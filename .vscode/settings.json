@@ -46,6 +46,7 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "ios": "cpp",
-        "climits": "cpp"
+        "climits": "cpp",
+        "pair": "cpp"
     }
 }
