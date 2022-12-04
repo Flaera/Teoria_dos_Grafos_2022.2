@@ -8,22 +8,22 @@
 int min(int x, int y){return x>y?y:x;}
 
 
-void bellmanFord(std::vector<std::vector<int>> g, int n, int m, int s, std::vector<std::vector<int>> d){
+void bellmanFord(std::vector<std::vector<int>> g, int n, int m, int s, int d[]){
     for (int i=0; i<n; ++i)
     {
         // for (int j=0; j<n; ++j)
-        d[0][i]=INFINITY;
+        d[i]=INFINITY;
     }
-    d[0][s] = 0;
+    d[s] = 0;
 
     DEBUG{std::cout<<"Calling main process...\n";}
-    for (int l=1; l<n-1; ++l){
+    for (int l=0; l<n; ++l){
         for (int k=0; k<n; ++k){
-            for (int i=0; i<n; ++i)
-            {
+            // for (int i=0; i<n; ++i)
+            // {
                 // DEBUG{std::cout<<"HERE\n";}
-                d[l][k] = min(d[l-1][k], d[l-1][i]+g[i][k]);
-            }
+            if (g[l][k]!=INFINITY){d[k] = min(d[k], d[l]+g[l][k]);}
+            // }
         }
     }
 }
@@ -50,15 +50,18 @@ int main(int agrc, char* argv[]){
     }
 
     int s=0;
-    std::vector<std::vector<int>> dist(n, std::vector<int>(n, 0));
-    DEBUG{std::cout<<"Calling the function\n";}
+    int dist[n];
+    for (int p=0; p<n; ++p){
+        dist[p]=0;
+    }
+    DEBUG{std::cout<<"Calling the function...\n";}
     bellmanFord(graph, n, m, s, dist);
 
     std::cout << "Dist:\n";
     for (int j=0; j<n; ++j){
-        for (int k=0; k<n; ++k){
-            std::cout<<"="<<dist[j][k]<<"=";
-        }
+        // for (int k=0; k<n; ++k){
+            std::cout<<"="<<dist[j]<<"=";
+        // }
         std::cout<<"\n";
     }
     
