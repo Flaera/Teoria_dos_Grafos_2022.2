@@ -59,10 +59,13 @@ int main(int argv, char** argc){
     prim(graph, init, previews, cost_weight);
 
     DEBUG{
-        std::cout<<"RESULT\n";
+        std::cout<<"RESULT:\n";
+        int t=0;
         for (int l=0; l<n; ++l){
+            t+=cost_weight[l];
             std::cout << "|" << cost_weight[l]<<"|"<<previews[l]<<"|";
             std::cout<<"\n";
         }
+        std::cout<<"TOTAL: "<<t<<"\n";
     }
 }
