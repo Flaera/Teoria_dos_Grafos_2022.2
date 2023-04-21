@@ -111,7 +111,10 @@ void KruskalMST(Graph* graph)
     }
     
     cout << "Custo minimo da AGV: " << minimumCost
-         << endl;
+        << endl;
+    
+    //Free memory:
+    delete subsets;
 }
  
 
@@ -129,9 +132,11 @@ int main()
         graph->edge[i].dest=t;
         graph->edge[i].weight=w;
     }
-
     
     KruskalMST(graph);
+
+    // Deleting/Free the memory of graph:
+    delete graph;
  
     return 0;
 }
