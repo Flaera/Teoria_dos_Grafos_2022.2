@@ -1,10 +1,10 @@
-# Teoria_dos_Grafos_2022.1
+# Teoria_dos_Grafos_2022.2
 
 
-Repositório criado para armazenar algoritmos aprendidos na disciplina de Teoria dos Grafos no período letivo de 2022.1.
+Repositório criado para armazenar algoritmos aprendidos na disciplina de Teoria dos Grafos no período letivo de 2022.2.
 
 
-Para executar um algritmo esteja branch "main" e execute os seguintes passos:
+Para executar um algoritmo esteja branch "main" e execute os seguintes passos:
 
 
     1º: Acesse a pasta do algoritmo;

@@ -5,26 +5,30 @@
 #define DEBUG if(1)
 #define INFINITY 100000
 
+
 int min(int x, int y){return x>y?y:x;}
 
 
-void bellmanFord(std::vector<std::vector<int>> g, int n, int m, int s, int d[]){
+void bellmanFord(std::vector<std::vector<int>> e, int n, int m, int s, int* d){
     for (int i=0; i<n; ++i)
     {
-        // for (int j=0; j<n; ++j)
         d[i]=INFINITY;
     }
     d[s] = 0;
 
     DEBUG{std::cout<<"Calling main process...\n";}
-    for (int l=0; l<n; ++l){
-        for (int k=0; k<n; ++k){
-            // for (int i=0; i<n; ++i)
-            // {
-                // DEBUG{std::cout<<"HERE\n";}
-            if (g[l][k]!=INFINITY){d[k] = min(d[k], d[l]+g[l][k]);}
-            // }
+    int change = 0;
+    for (int j=0; j<n-1; j++){
+        for (auto iter_e : e){
+            int u = iter_e[0];
+            int v = iter_e[1];
+            int w = iter_e[2];
+            if (d[v]>w+d[u]){change=1;}
+            d[v] = min(d[v],w+d[u]);
         }
+    }
+    if (change==1){
+        std::cout << "This graph have cicle negative.\n";
     }
 }
 
@@ -33,17 +37,17 @@ int main(int agrc, char* argv[]){
     int m, n;
 
     std::cin >> n >> m;
-    std::vector<std::vector<int>> graph(n, std::vector<int>(n,INFINITY));
+    std::vector<std::vector<int>> edges;
     for (int i=0; i<m; ++i){
         int init, end, w;
         std::cin >> init >> end >> w;
         // std::cout<<init;
-        graph[init][end]=w;
+        edges.push_back({init,end,w});
     }
     DEBUG{
-        std::cout<<"MATRIX  GRAPH:\n";
-        for (int m=0; m<n; ++m){
-            for (int k=0; k<n; ++k){std::cout<<"|"<<graph[m][k]<<"|";}
+        std::cout<<"EDGES OF GRAPH:\n";
+        for (int k=0; k<m; ++k){
+            std::cout<<"|"<<edges[k][0]<<"|"<<edges[k][1]<<"|"<<edges[k][2]<<"|";
             std::cout<<"\n";
         }
         std::cout<<"Test of function min:"<<min(20,10)<<"\n";
@@ -51,11 +55,7 @@ int main(int agrc, char* argv[]){
 
     int s=0;
     int dist[n];
-    for (int p=0; p<n; ++p){
-        dist[p]=0;
-    }
-    DEBUG{std::cout<<"Calling the function...\n";}
-    bellmanFord(graph, n, m, s, dist);
+    bellmanFord(edges, n, m, s, dist);
 
     std::cout << "Dist:\n";
     for (int j=0; j<n; ++j){
