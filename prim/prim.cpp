@@ -42,8 +42,8 @@ int main(int argv, char** argc){
     for (int i=0; i<m; ++i){
         int a, b, w;
         std::cin>>a>>b>>w;
-        graph[a][b]=w;
-        graph[b][a]=w;
+        graph[a-1][b-1]=w;
+        graph[b-1][a-1]=w;
     }
     DEBUG{
         for (int j=0; j<n; ++j){
