@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <queue>
 #include <climits>
 #include <vector>
@@ -35,29 +36,68 @@ void Dijkstra(std::vector<std::vector<int>> graph, int s, int dist[], int pre[])
 }
 
 
-int main(int argc, char** argv){
+int main(int argv, char** argc){
+    for (int index_arg=0; index_arg<argv; ++index_arg){
+        if (argc[index_arg][0]=='-' && argc[index_arg][1]=='f'){
+            FILE* file = fopen(argc[index_arg+1], "r");
+            if (file==NULL){
+                std::cout << "File not found.\n";
+                return 0;
+            }
+            int lenx, leny;
+            fscanf(file, "%d %d", &lenx, &leny);
+            // std::cin >> lenx >> leny;
+            std::vector<std::vector<int>> graph(lenx, std::vector<int>(lenx, 0));
+            
+            for (int i=0; i<leny; i++){
+                int vertex_init, vertex_end, weight;
+                // std::cin >> vertex_init >> vertex_end >> weight;
+                fscanf(file, "%d %d %d", &vertex_init, &vertex_end, &weight);
+                graph[vertex_init-1][vertex_end-1] = weight;
+                graph[vertex_end-1][vertex_init-1] = weight;
+            }
 
-    int lenx, leny;
-    std::cin >> lenx >> leny;
+            int dist[lenx];
+            int pre[lenx];
+            int s = 0;
+            for (int index_arg1=0; index_arg1<argv; index_arg1++){
+                if (argc[index_arg1][0]=='-' && argc[index_arg1][1]=='i'){
+                    s = std::stoi(argc[index_arg1+1])-1;
+                }
+            }
 
-    std::vector<std::vector<int>> graph(lenx, std::vector<int>(lenx, 0));
-    
-    for (int i=0; i<leny; i++){
-        int vertex_init, vertex_end, weight;
-        std::cin >> vertex_init >> vertex_end >> weight;
-        graph[vertex_init][vertex_end] = weight;
-        graph[vertex_end][vertex_init] = weight;
-    }
+            Dijkstra(graph, s, dist, pre);
 
-    int dist[lenx];
-    int pre[lenx];
+            FILE* savefile;
+            int save=0;
+            for (int index_arg2=0; index_arg2<argv; ++index_arg2){
+                if (argc[index_arg2][0]=='-' && argc[index_arg2][1]=='o'){
+                    save=1;
+                    savefile = fopen(argc[index_arg2+1], "w");
+                    break;
+                }
+            }
 
-    Dijkstra(graph, 0, dist, pre);
+            if (save==1){fprintf(savefile, "Dist e pre:\n");}
+            std::cout << "Dist e pre:\n";
+            for (int j=0; j<lenx; ++j){
+                std::cout<<"dist="<<dist[j]<<",pre="<<pre[j]<<"\n";
+                fprintf(savefile, "dist=%d,pre=%d\n", dist[j], pre[j]);
+            }
 
-    DEBUG{
-        std::cout << "Dist e pre:\n";
-        for (int j=0; j<lenx; ++j){
-            std::cout<<"dist="<<dist[j]<<",pre="<<pre[j]<<"\n";
+            if (save==1){fclose(savefile);}
+            fclose(file);
+        }
+        if (argc[index_arg][0]=='-' && argc[index_arg][1]=='h'){
+            std::cout<<"Para executar um algoritmo esteja branch \"main\", tenha o g++ e execute os seguintes passos:\n\n";
+            std::cout<<"1º: Acesse a pasta do algoritmo;\n\n";
+            std::cout<<"2º: Digite sem as aspas a palavra \"make\" para compilar.\n\n";
+            std::cout<<"3º: Digite sem as aspas a palavra \"./<nome_do_algoritmo> <parametros>\" para executar.\n\n";
+            std::cout<<"Em caso de dúvida digite -h como parâmetro.\n\n";
+            std::cout<<"Direcione a saída para um arquivo com o parâmetro -o e nome_do_arquivo.dat\n";
+            std::cout<<"Indique um arquivo que contém o grafo com o parâmetro -f e nome_do_arquivo.dat\n";
+            // std::cout<<"Mostre a solução em ordem crescente com o parâmetro -s\n";
+            std::cout<<"Defina o vértice inicial com o parâmetro -i.\n\n";
         }
     }
 

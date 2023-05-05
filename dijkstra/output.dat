@@ -1,0 +1,9 @@
+Dist e pre:
+dist=0,pre=-1
+dist=2,pre=0
+dist=1,pre=0
+dist=2,pre=0
+dist=3,pre=3
+dist=2,pre=2
+dist=3,pre=5
+dist=4,pre=6
