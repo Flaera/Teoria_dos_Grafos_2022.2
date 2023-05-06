@@ -1,2 +1,3 @@
+CC=g++
 all:
-	g++ prim.cpp -o prim -Wall
+	$(CC) prim.cpp -o prim -Wall

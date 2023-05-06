@@ -1,2 +1,3 @@
+CC=g++
 all:
-	g++ dijkstra.cpp -o dijkstra -Wall
+	$(CC) dijkstra.cpp -o dijkstra -Wall

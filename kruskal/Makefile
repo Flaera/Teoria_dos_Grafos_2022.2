@@ -1,2 +1,3 @@
+CC=g++
 all:
-	g++ kruskal.cpp -o kruskal -Wall
+	$(CC) kruskal.cpp -o kruskal -Wall

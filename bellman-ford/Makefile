@@ -1,2 +1,3 @@
+CC=g++
 all:
-	g++ bellman-ford.cpp -o bellman-ford -Wall
+	$(CC) bellman-ford.cpp -o bellman-ford -Wall
