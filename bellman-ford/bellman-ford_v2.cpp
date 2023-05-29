@@ -5,39 +5,61 @@
 #include <climits>
 #define DEBUG if(0)
 #define INFINITY 100000
+#define MAX_NODES 1000
 
 
-int min(int x, int y){return x>y?y:x;}
+class Edge {
+    public:
+        int origin;
+        int destiny;
+        int weight;
+};
 
 
-int bellmanFord(std::vector<std::vector<int>> e, int n, int m, int s, int d[]){
-    for (int i=0; i<n; ++i)
-    {
-        d[i]=INFINITY;
-    }
-    d[s] = 0;
-
-    DEBUG{std::cout<<"Calling main process...\n";}
-    int change = 0;
-    for (int j=1; j<=n-1; j++){
-        for (auto iter_e : e){
-            int u = iter_e[0];
-            int v = iter_e[1];
-            int w = iter_e[2];
-            if (d[u]!=INFINITY){
-                std::cout<<"d[v]="<<d[v]<<" w+d[u]="<<w+d[u]<<"\n";
-                if (w+d[u]<d[v]){
-                    d[v] = w+d[u];
-                    change=1;
-                }
+bool bellmanFord(int G[][MAX_NODES], int n, int s, int dist[]){
+    Edge* A = NULL;
+    A = new Edge[n*MAX_NODES];
+    int m = 0;
+    // std::cout<<"ESTOU AQUI\n";
+    for (int i=0; i<n; i++){
+        for (int j=0; j<n; j++){
+            if (G[i][j]!=0){
+                A[m].origin = i;
+                A[m].destiny = j;
+                A[m].weight = G[i][j];
+                m++;
             }
-            // std::cout<<"AQUI\n";
         }
     }
-    if (change==1){
-        std::cout << "This graph have cicle negative.\n";
+    // std::cout<<"ESTOU AQUI\n";
+
+    for (int i=0; i<n; i++){
+        dist[i]=INFINITY;
     }
-    return change;
+    dist[s]=0;
+    bool change;
+
+    for (int i=0; i<n; i++){
+        change=true;
+        for (int j=0; j<m; j++){
+            int u = A[i].destiny;
+            int v = A[i].origin;
+            int w = A[i].weight;
+            std::cout<<dist[u]<<" -- "<<dist[v]+w<<"\n";
+            if (dist[v]!=INFINITY && dist[u]>dist[v]+w){
+                dist[u]=dist[v]+w;
+                change = true;
+            }
+        }
+        if (!change){break;}
+    }
+
+    for (int i=0; i<m; i++){
+        if (dist[A[i].destiny>dist[A[i].origin]+A[i].weight]){
+            return false;
+        }
+    }
+    return true;
 }
 
 
@@ -52,23 +74,20 @@ int main(int argv, char* argc[]){
             int m, n;
 
             // std::cin >> n >> m;
-            fscanf(file, "%d %d", &n, &m);
-            //std::cout<<"VALUES INICIAIS: "<<n<<" "<<m<<" "<<"\n";
-            std::vector<std::vector<int>> edges;
+            fscanf(file, "%d %d\n", &n, &m);
+            // std::cout<<"VALUES INICIAIS: "<<n<<" "<<m<<" "<<"\n";
+            int graph[n][MAX_NODES];
+            for (int i=0; i<n; i++){
+                for (int j=0; j<MAX_NODES; j++){
+                    graph[i][j]=0;
+                }
+            }
             for (int i=0; i<m; ++i){
                 int init, end, w;
                 // std::cin >> init >> end >> w;
-                fscanf(file, "%d %d %d", &init, &end, &w);
+                fscanf(file, "%d %d %d\n", &init, &end, &w);
                 // std::cout<<init<<" "<<end<<" "<<w<<"\n";
-                edges.push_back({init-1,end-1,w});
-            }
-            DEBUG{
-                std::cout<<"EDGES OF GRAPH:\n";
-                for (int k=0; k<m; ++k){
-                    std::cout<<"|"<<edges[k][0]<<"|"<<edges[k][1]<<"|"<<edges[k][2]<<"|";
-                    std::cout<<"\n";
-                }
-                std::cout<<"Test of function min:"<<min(20,10)<<"\n";
+                graph[init-1][end-1] = w;
             }
 
             int s=0;
@@ -78,9 +97,10 @@ int main(int argv, char* argc[]){
                     break;
                 }
             }
+
             int dist[n];
-            int cycle_negative = 0;
-            cycle_negative = bellmanFord(edges, n, m, s, dist);
+            bool cycle_negative;
+            cycle_negative = bellmanFord(graph, n, s, dist);
 
             int save = 0;
             FILE* savefile;
@@ -93,7 +113,10 @@ int main(int argv, char* argc[]){
             }
             std::cout << "Dist:\n";
             if (save==1){
-                if (cycle_negative==1){fprintf(savefile, "This graph have cicle negative.\n");}
+                if (cycle_negative){
+                    fprintf(savefile, "This graph have cicle negative.\n");
+                    std::cout<<"This graph have cicle negative.\n";
+                }
                 fprintf(savefile, "Dist:\n");
             }
             for (int j=0; j<n; ++j){

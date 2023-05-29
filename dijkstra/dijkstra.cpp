@@ -78,12 +78,13 @@ int main(int argv, char** argc){
                 }
             }
 
-            if (save==1){fprintf(savefile, "Dist e pre:\n");}
-            std::cout << "Dist e pre:\n";
+            // if (save==1){fprintf(savefile, "Dist e pre:\n");}
+            // std::cout << "Dist e pre:\n";
             for (int j=0; j<lenx; ++j){
-                std::cout<<"dist="<<dist[j]<<",pre="<<pre[j]<<"\n";
-                fprintf(savefile, "dist=%d,pre=%d\n", dist[j], pre[j]);
+                std::cout<<dist[j]<<":"<<pre[j]<<" ";
+                if (save==1){fprintf(savefile, "%d:%d ", dist[j], pre[j]);}
             }
+            std::cout<<"\n";
 
             if (save==1){fclose(savefile);}
             fclose(file);
